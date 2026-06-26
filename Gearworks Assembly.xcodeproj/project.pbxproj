@@ -1,0 +1,375 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000001 /* GearworksAssemblyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* GearworksAssemblyApp.swift */; };
+		A1000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* ContentView.swift */; };
+		A1000003 /* EngineCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000003 /* EngineCore.swift */; };
+		A1000004 /* PuzzleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000004 /* PuzzleModel.swift */; };
+		A1000005 /* Simulation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000005 /* Simulation.swift */; };
+		A1000006 /* PuzzleBuilders.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000006 /* PuzzleBuilders.swift */; };
+		A1000007 /* PuzzleLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000007 /* PuzzleLibrary.swift */; };
+		A1000008 /* GearWebPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000008 /* GearWebPanel.swift */; };
+		A1000009 /* GearLoadingScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000009 /* GearLoadingScreen.swift */; };
+		A1000010 /* GearTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000010 /* GearTheme.swift */; };
+		A1000011 /* GearShapes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000011 /* GearShapes.swift */; };
+		A1000012 /* GameStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000012 /* GameStore.swift */; };
+		A1000013 /* Achievements.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000013 /* Achievements.swift */; };
+		A1000014 /* WorkbenchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000014 /* WorkbenchView.swift */; };
+		A1000015 /* EditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000015 /* EditorViewModel.swift */; };
+		A1000016 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000016 /* EditorView.swift */; };
+		A1000017 /* EditorControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000017 /* EditorControls.swift */; };
+		A1000018 /* BoardCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000018 /* BoardCanvas.swift */; };
+		A1000019 /* MetricsHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000019 /* MetricsHUDView.swift */; };
+		A1000020 /* TapeEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000020 /* TapeEditorView.swift */; };
+		A1000021 /* ManualView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000021 /* ManualView.swift */; };
+		A1000022 /* AwardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000022 /* AwardsView.swift */; };
+		A1000023 /* MoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000023 /* MoreView.swift */; };
+		A1000024 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000024 /* OnboardingView.swift */; };
+		A1000099 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1000099 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B1000001 /* GearworksAssemblyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearworksAssemblyApp.swift; sourceTree = "<group>"; };
+		B1000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B1000003 /* EngineCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineCore.swift; sourceTree = "<group>"; };
+		B1000004 /* PuzzleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleModel.swift; sourceTree = "<group>"; };
+		B1000005 /* Simulation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Simulation.swift; sourceTree = "<group>"; };
+		B1000006 /* PuzzleBuilders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleBuilders.swift; sourceTree = "<group>"; };
+		B1000007 /* PuzzleLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuzzleLibrary.swift; sourceTree = "<group>"; };
+		B1000008 /* GearWebPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearWebPanel.swift; sourceTree = "<group>"; };
+		B1000009 /* GearLoadingScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearLoadingScreen.swift; sourceTree = "<group>"; };
+		B1000010 /* GearTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearTheme.swift; sourceTree = "<group>"; };
+		B1000011 /* GearShapes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearShapes.swift; sourceTree = "<group>"; };
+		B1000012 /* GameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStore.swift; sourceTree = "<group>"; };
+		B1000013 /* Achievements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievements.swift; sourceTree = "<group>"; };
+		B1000014 /* WorkbenchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkbenchView.swift; sourceTree = "<group>"; };
+		B1000015 /* EditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewModel.swift; sourceTree = "<group>"; };
+		B1000016 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
+		B1000017 /* EditorControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorControls.swift; sourceTree = "<group>"; };
+		B1000018 /* BoardCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardCanvas.swift; sourceTree = "<group>"; };
+		B1000019 /* MetricsHUDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsHUDView.swift; sourceTree = "<group>"; };
+		B1000020 /* TapeEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapeEditorView.swift; sourceTree = "<group>"; };
+		B1000021 /* ManualView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualView.swift; sourceTree = "<group>"; };
+		B1000022 /* AwardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardsView.swift; sourceTree = "<group>"; };
+		B1000023 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
+		B1000024 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		B1000099 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B1000098 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C1000001 /* Gearworks Assembly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Gearworks Assembly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F1000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		G1000001 = {
+			isa = PBXGroup;
+			children = (
+				G1000002 /* Gearworks Assembly */,
+				G1000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		G1000002 /* Gearworks Assembly */ = {
+			isa = PBXGroup;
+			children = (
+				B1000001 /* GearworksAssemblyApp.swift */,
+				B1000002 /* ContentView.swift */,
+				B1000003 /* EngineCore.swift */,
+				B1000004 /* PuzzleModel.swift */,
+				B1000005 /* Simulation.swift */,
+				B1000006 /* PuzzleBuilders.swift */,
+				B1000007 /* PuzzleLibrary.swift */,
+				B1000008 /* GearWebPanel.swift */,
+				B1000009 /* GearLoadingScreen.swift */,
+				B1000010 /* GearTheme.swift */,
+				B1000011 /* GearShapes.swift */,
+				B1000012 /* GameStore.swift */,
+				B1000013 /* Achievements.swift */,
+				B1000014 /* WorkbenchView.swift */,
+				B1000015 /* EditorViewModel.swift */,
+				B1000016 /* EditorView.swift */,
+				B1000017 /* EditorControls.swift */,
+				B1000018 /* BoardCanvas.swift */,
+				B1000019 /* MetricsHUDView.swift */,
+				B1000020 /* TapeEditorView.swift */,
+				B1000021 /* ManualView.swift */,
+				B1000022 /* AwardsView.swift */,
+				B1000023 /* MoreView.swift */,
+				B1000024 /* OnboardingView.swift */,
+				B1000099 /* Assets.xcassets */,
+				B1000098 /* Info.plist */,
+			);
+			path = "Gearworks Assembly";
+			sourceTree = "<group>";
+		};
+		G1000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1000001 /* Gearworks Assembly.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		T1000001 /* Gearworks Assembly */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = L1000001 /* Build configuration list for PBXNativeTarget "Gearworks Assembly" */;
+			buildPhases = (
+				P1000001 /* Sources */,
+				F1000001 /* Frameworks */,
+				R1000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Gearworks Assembly";
+			productName = "Gearworks Assembly";
+			productReference = C1000001 /* Gearworks Assembly.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		PROJECT_OBJ /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					T1000001 = {
+						CreatedOnToolsVersion = 13.4;
+					};
+				};
+			};
+			buildConfigurationList = L1000002 /* Build configuration list for PBXProject "Gearworks Assembly" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = G1000001;
+			productRefGroup = G1000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				T1000001 /* Gearworks Assembly */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		R1000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000099 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		P1000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001 /* GearworksAssemblyApp.swift in Sources */,
+				A1000002 /* ContentView.swift in Sources */,
+				A1000003 /* EngineCore.swift in Sources */,
+				A1000004 /* PuzzleModel.swift in Sources */,
+				A1000005 /* Simulation.swift in Sources */,
+				A1000006 /* PuzzleBuilders.swift in Sources */,
+				A1000007 /* PuzzleLibrary.swift in Sources */,
+				A1000008 /* GearWebPanel.swift in Sources */,
+				A1000009 /* GearLoadingScreen.swift in Sources */,
+				A1000010 /* GearTheme.swift in Sources */,
+				A1000011 /* GearShapes.swift in Sources */,
+				A1000012 /* GameStore.swift in Sources */,
+				A1000013 /* Achievements.swift in Sources */,
+				A1000014 /* WorkbenchView.swift in Sources */,
+				A1000015 /* EditorViewModel.swift in Sources */,
+				A1000016 /* EditorView.swift in Sources */,
+				A1000017 /* EditorControls.swift in Sources */,
+				A1000018 /* BoardCanvas.swift in Sources */,
+				A1000019 /* MetricsHUDView.swift in Sources */,
+				A1000020 /* TapeEditorView.swift in Sources */,
+				A1000021 /* ManualView.swift in Sources */,
+				A1000022 /* AwardsView.swift in Sources */,
+				A1000023 /* MoreView.swift in Sources */,
+				A1000024 /* OnboardingView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		BUILDCONFIG_DEBUG /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BUILDCONFIG_RELEASE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		TARGETCONFIG_DEBUG /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Gearworks Assembly/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Gearworks Assembly";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gearworksassembly.app;
+				PRODUCT_NAME = "Gearworks Assembly";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		TARGETCONFIG_RELEASE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = "Gearworks Assembly/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Gearworks Assembly";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gearworksassembly.app;
+				PRODUCT_NAME = "Gearworks Assembly";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		L1000001 /* Build configuration list for PBXNativeTarget "Gearworks Assembly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				TARGETCONFIG_DEBUG /* Debug */,
+				TARGETCONFIG_RELEASE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		L1000002 /* Build configuration list for PBXProject "Gearworks Assembly" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BUILDCONFIG_DEBUG /* Debug */,
+				BUILDCONFIG_RELEASE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = PROJECT_OBJ /* Project object */;
+}

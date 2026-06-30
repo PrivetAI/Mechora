@@ -39,6 +39,13 @@ struct EditorView: View {
             }
         }
         .sheet(isPresented: $showGoal) { GoalSheet(puzzle: puzzle).environmentObject(store) }
+        .onAppear {
+            // Auto-present the goal the first time each puzzle is opened (once).
+            if !store.hasSeenGoal(puzzle.id) {
+                store.markGoalSeen(puzzle.id)
+                showGoal = true
+            }
+        }
         .onDisappear { vm.onDisappear() }
     }
 
@@ -46,8 +53,9 @@ struct EditorView: View {
 
     private func portraitLayout(_ geo: GeometryProxy) -> some View {
         VStack(spacing: 8) {
+            ObjectiveBanner(puzzle: puzzle, vm: vm).padding(.horizontal, 10)
             EditorControls(vm: vm)
-            boardArea(height: geo.size.height * 0.44)
+            boardArea(height: geo.size.height * 0.40)
             ScrollView { controlPanel.padding(.horizontal, 12).padding(.bottom, 12) }
         }
         .padding(.top, 6)
@@ -56,8 +64,9 @@ struct EditorView: View {
     private func landscapeLayout(_ geo: GeometryProxy) -> some View {
         HStack(spacing: 10) {
             VStack(spacing: 8) {
+                ObjectiveBanner(puzzle: puzzle, vm: vm)
                 EditorControls(vm: vm)
-                boardArea(height: geo.size.height - 70)
+                boardArea(height: geo.size.height - 150)
             }
             .frame(width: geo.size.width * 0.5)
             ScrollView { controlPanel.padding(.trailing, 10).padding(.bottom, 12) }
@@ -82,6 +91,60 @@ struct EditorView: View {
             ArmInspectorView(vm: vm)
             TapeEditorView(vm: vm)
         }
+    }
+}
+
+// MARK: - Always-visible objective banner
+
+/// Compact, always-on goal reminder at the top of the play screen: shows the
+/// sink's target molecule + "× N" and a one-line description of the loop. When
+/// no arm has been placed yet it also coaches the very first action.
+struct ObjectiveBanner: View {
+    let puzzle: Puzzle
+    @ObservedObject var vm: EditorViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 8) {
+                Text("BUILD")
+                    .font(.system(size: 11, weight: .black, design: .rounded))
+                    .foregroundColor(GearPalette.navyDeep)
+                    .padding(.horizontal, 7).padding(.vertical, 3)
+                    .background(RoundedRectangle(cornerRadius: 6).fill(GearPalette.verdigris))
+                ForEach(Array(puzzle.sinks.enumerated()), id: \.offset) { _, sink in
+                    HStack(spacing: 4) {
+                        ForEach(Array(sink.target.atoms.enumerated()), id: \.offset) { _, a in
+                            AtomNodeView(element: a.element, size: 22)
+                        }
+                        Text("× \(sink.required)")
+                            .font(.system(size: 14, weight: .black, design: .rounded))
+                            .foregroundColor(GearPalette.ivory)
+                    }
+                }
+                Spacer(minLength: 0)
+            }
+            Text("Carry atoms from the copper inputs to the green output to build this.")
+                .font(.system(size: 11.5, weight: .semibold))
+                .foregroundColor(GearPalette.haze)
+                .fixedSize(horizontal: false, vertical: true)
+            if !vm.hasArms {
+                HStack(spacing: 6) {
+                    ArmToolGlyph(color: GearPalette.copperBright).frame(width: 14, height: 14)
+                    Text("Start: pick the Arm tool, then tap a grid cell next to a copper input.")
+                        .font(.system(size: 11.5, weight: .bold))
+                        .foregroundColor(GearPalette.copperBright)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .padding(.horizontal, 12).padding(.vertical, 9)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(GearPalette.panel)
+                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(vm.hasArms ? GearPalette.line : GearPalette.copper.opacity(0.7), lineWidth: 1))
+        )
     }
 }
 
@@ -135,11 +198,16 @@ struct ArmInspectorView: View {
                     .disabled(vm.isSimActive)
                 }
             } else {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("No Arm Selected")
-                        .font(.system(size: 15, weight: .black, design: .rounded))
-                        .foregroundColor(GearPalette.ivory)
-                    Text("Pick the Arm tool and tap the grid to place an arm, then tap it to edit its program below.")
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        ArmToolGlyph(color: GearPalette.copperBright).frame(width: 18, height: 18)
+                        Text(vm.hasArms ? "No Arm Selected" : "Place Your First Arm")
+                            .font(.system(size: 15, weight: .black, design: .rounded))
+                            .foregroundColor(GearPalette.ivory)
+                    }
+                    Text(vm.hasArms
+                         ? "Tap an arm on the grid to select it and edit its reach, facing, and program below."
+                         : "1. Tap the Arm tool above.\n2. Tap a grid cell next to a copper input.\n3. Tap the arm to program its looping tape, then press Run.")
                         .font(.system(size: 13, weight: .medium)).foregroundColor(GearPalette.haze)
                         .fixedSize(horizontal: false, vertical: true)
                 }

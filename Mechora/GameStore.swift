@@ -16,6 +16,7 @@ struct SaveState: Codable {
     var onboardingDone: Bool
     var soundOn: Bool
     var showGridCoords: Bool
+    var seenGoals: [String]   // puzzle ids whose goal sheet has auto-shown once
 
     init() {
         version = 1
@@ -30,11 +31,12 @@ struct SaveState: Codable {
         onboardingDone = false
         soundOn = true
         showGridCoords = false
+        seenGoals = []
     }
 
     enum CodingKeys: String, CodingKey {
         case version, solutions, solvedIds, bestCycles, bestCost, bestArea, bestInstr
-        case unlockedAchievements, runsStarted, onboardingDone, soundOn, showGridCoords
+        case unlockedAchievements, runsStarted, onboardingDone, soundOn, showGridCoords, seenGoals
     }
 
     init(from decoder: Decoder) throws {
@@ -51,6 +53,7 @@ struct SaveState: Codable {
         onboardingDone = try c.decodeIfPresent(Bool.self, forKey: .onboardingDone) ?? false
         soundOn = try c.decodeIfPresent(Bool.self, forKey: .soundOn) ?? true
         showGridCoords = try c.decodeIfPresent(Bool.self, forKey: .showGridCoords) ?? false
+        seenGoals = try c.decodeIfPresent([String].self, forKey: .seenGoals) ?? []
     }
 }
 
@@ -160,6 +163,14 @@ final class GameStore: ObservableObject {
 
     func setOnboardingDone() { state.onboardingDone = true; persist() }
     var onboardingDone: Bool { state.onboardingDone }
+
+    /// First-open goal presentation: returns true once per puzzle, then records it.
+    func hasSeenGoal(_ puzzleId: String) -> Bool { state.seenGoals.contains(puzzleId) }
+    func markGoalSeen(_ puzzleId: String) {
+        guard !state.seenGoals.contains(puzzleId) else { return }
+        state.seenGoals.append(puzzleId)
+        persist()
+    }
 
     func toggleSound() { state.soundOn.toggle(); persist() }
     var soundOn: Bool { state.soundOn }

@@ -40,8 +40,12 @@ struct EditorControls: View {
 
     private var simRow: some View {
         HStack(spacing: 8) {
-            simButton(label: "Reset", fill: GearPalette.panel, textColor: GearPalette.ivory) {
-                ResetGlyph(color: GearPalette.ivory).frame(width: 18, height: 18)
+            // While a simulation is active, Reset is the clear way back to editing,
+            // so highlight it; when idle it stays a quiet secondary control.
+            simButton(label: vm.isSimActive ? "Reset · Edit" : "Reset",
+                      fill: vm.isSimActive ? GearPalette.copper : GearPalette.panel,
+                      textColor: vm.isSimActive ? GearPalette.navyDeep : GearPalette.ivory) {
+                ResetGlyph(color: vm.isSimActive ? GearPalette.navyDeep : GearPalette.ivory).frame(width: 18, height: 18)
             } action: { vm.reset() }
 
             simButton(label: "Step", fill: GearPalette.panel, textColor: GearPalette.ivory) {

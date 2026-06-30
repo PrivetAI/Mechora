@@ -13,19 +13,21 @@ struct OnboardingView: View {
     private var steps: [OnboardingStep] {
         [
             OnboardingStep(
-                title: "Welcome to the Drafting Room",
-                body: "Mechora is a puzzle of programmable machines. You build a machine on the grid and it runs in perfectly predictable cycles to turn input atoms into the product the sink wants.",
-                glyph: AnyView(ZStack {
-                    GearCogShape(teeth: 11).fill(GearPalette.copper).frame(width: 80, height: 80)
-                    GearCogShape(teeth: 8).fill(GearPalette.verdigris).frame(width: 48, height: 48).offset(x: 50, y: 36)
+                title: "The Goal: Input → Output",
+                body: "Each puzzle has copper INPUT cells (dashed copper squares) that supply atoms, and one green OUTPUT cell (the sink) that wants a specific molecule. Your job: build a machine that carries atoms from the copper inputs to the green output to make that molecule.",
+                glyph: AnyView(HStack(spacing: 14) {
+                    AtomNodeView(element: .alpha, size: 34)
+                    InstructionGlyph(instruction: .extend, color: GearPalette.haze).frame(width: 24, height: 24)
+                    RoundedRectangle(cornerRadius: 5).stroke(GearPalette.verdigris, lineWidth: 2)
+                        .frame(width: 34, height: 34)
                 })),
             OnboardingStep(
                 title: "Place an Arm",
-                body: "Pick the Arm tool and tap the grid. An arm has a pivot, a reach of 1–3, and a starting facing. Tap an arm to select it and adjust its reach and heading.",
+                body: "Pick the Arm tool and tap a grid cell next to a copper input. An arm has a pivot, a reach of 1–3, and a starting facing. Tap an arm to select it and adjust its reach and heading. No arm = nothing to run.",
                 glyph: AnyView(ArmToolGlyph(color: GearPalette.copperBright).frame(width: 80, height: 80))),
             OnboardingStep(
-                title: "Write the Program",
-                body: "Each arm runs a looping tape of instructions — Grab, Turn, Extend, Drop — one step per cycle. Add tokens from the palette and reorder them. A short loop can deliver many products.",
+                title: "Program the Looping Tape",
+                body: "Each arm runs a tape of instructions — Grab, Turn, Extend, Drop. It performs ONE instruction per cycle, then LOOPS back to the start and repeats forever. A good short loop grabs an atom at the input and drops it at the output, over and over.",
                 glyph: AnyView(HStack(spacing: 8) {
                     ForEach([Instruction.grab, .rotateCW, .drop], id: \.rawValue) { ins in
                         InstructionGlyph(instruction: ins, color: GearPalette.copperBright)
@@ -35,15 +37,15 @@ struct OnboardingView: View {
                 })),
             OnboardingStep(
                 title: "Bond and Build",
-                body: "Place bonders on adjacent cells to fuse atoms into molecules. The arm grabs a whole bonded group at once, so you can carry assembled products to the sink.",
+                body: "Place bonders on adjacent cells to fuse atoms into molecules. The arm grabs a whole bonded group at once, so you can carry assembled products to the green output.",
                 glyph: AnyView(HStack(spacing: 4) {
                     AtomNodeView(element: .alpha, size: 34)
                     Rectangle().fill(GearPalette.copperBright).frame(width: 16, height: 5)
                     AtomNodeView(element: .beta, size: 34)
                 })),
             OnboardingStep(
-                title: "Run, Step, Refine",
-                body: "Press Run to simulate, or Step to advance one cycle and study it. Beat the cycle and cost budgets to earn up to three stars, and stars unlock new chapters. Let's build!",
+                title: "Run, Reset, Refine",
+                body: "Press Run to simulate your machine (Step advances one cycle so you can study it). Reset stops the run and returns you to editing — your machine is kept, the atoms just go back to the start. Beat the cycle and cost budgets for up to three stars. Let's build!",
                 glyph: AnyView(HStack(spacing: 14) {
                     PlayGlyph(color: GearPalette.verdigris).frame(width: 34, height: 34)
                     StarRow(filled: 3, total: 3, size: 24)

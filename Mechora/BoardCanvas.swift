@@ -31,7 +31,15 @@ struct BoardCanvas: View {
     }
 
     var body: some View {
-        _ = vm.refreshToken
+        // Explicitly read every published value the board depends on so SwiftUI
+        // always re-evaluates this view (and rebuilds the Canvas with a fresh
+        // draw closure) when the sim advances OR is reset. refreshToken is bumped
+        // on every tick and on reset; phase/simTick/selectedArmId cover the rest.
+        let token = vm.refreshToken
+        let phase = vm.phase
+        let tick = vm.simTick
+        let selected = vm.selectedArmId
+        _ = (token, phase, tick, selected)
         let lay = layout()
         return Canvas { ctx, _ in
             draw(ctx: &ctx, cell: lay.cell, origin: lay.origin)

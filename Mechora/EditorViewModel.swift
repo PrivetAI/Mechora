@@ -72,6 +72,7 @@ final class EditorViewModel: ObservableObject {
     // MARK: Editing
 
     var isSimActive: Bool { sim != nil }
+    var hasArms: Bool { !solution.arms.isEmpty }
 
     private func mechanismOccupies(_ cell: GridPos) -> Bool {
         if solution.arms.contains(where: { $0.pivot == cell }) { return true }
@@ -195,13 +196,21 @@ final class EditorViewModel: ObservableObject {
         if let s = sim, s.status == .running { phase = .paused }
     }
 
+    /// Stops any running simulation and returns the board to the fully editable
+    /// starting state: arms snap back to their start facing, atoms back to the
+    /// dispenser preview, metrics/delivery zeroed, editing tools re-enabled.
     func reset() {
+        let wasActive = sim != nil
         stopTimer()
         sim = nil
         simTick = 0
         delivered = Array(repeating: 0, count: puzzle.sinks.count)
+        didRecordSolve = false
         phase = .idle
-        statusText = "Build your machine, then press Run."
+        statusText = wasActive ? "Reset — edit your machine, then press Run."
+                               : "Build your machine, then press Run."
+        // Re-render the board. refreshToken is @Published, so this also drives the
+        // BoardCanvas redraw back to the editable preview state.
         refreshToken &+= 1
     }
 

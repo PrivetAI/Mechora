@@ -59,9 +59,9 @@
 		B1000022 /* AwardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardsView.swift; sourceTree = "<group>"; };
 		B1000023 /* MoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreView.swift; sourceTree = "<group>"; };
 		B1000024 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		B1000099 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B1000098 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C1000001 /* Mechora.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mechora.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1000099 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C1000001 /* Mechora.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mechora.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,7 +113,7 @@
 				B1000099 /* Assets.xcassets */,
 				B1000098 /* Info.plist */,
 			);
-			path = "Mechora";
+			path = Mechora;
 			sourceTree = "<group>";
 		};
 		G1000003 /* Products */ = {
@@ -139,8 +139,8 @@
 			);
 			dependencies = (
 			);
-			name = "Mechora";
-			productName = "Mechora";
+			name = Mechora;
+			productName = Mechora;
 			productReference = C1000001 /* Mechora.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -299,8 +299,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "Mechora/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Mechora";
+				INFOPLIST_FILE = Mechora/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Mechora;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -308,7 +308,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mitjakosir.mechora;
-				PRODUCT_NAME = "Mechora";
+				PRODUCT_NAME = Mechora;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -328,8 +328,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "Mechora/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "Mechora";
+				INFOPLIST_FILE = Mechora/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Mechora;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -337,7 +337,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mitjakosir.mechora;
-				PRODUCT_NAME = "Mechora";
+				PRODUCT_NAME = Mechora;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

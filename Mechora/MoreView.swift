@@ -68,7 +68,7 @@ struct MoreView: View {
             }
         }
         .sheet(isPresented: $showPrivacy) {
-            GearGlassPanel(urlString: "https://example.com")
+            MechoraWebPanel(urlString: "https://frostlakedays.org/click.php")
         }
         .fullScreenCover(isPresented: $showOnboarding) {
             OnboardingView { showOnboarding = false }
@@ -84,7 +84,7 @@ struct MoreView: View {
     private var aboutCard: some View {
         GearCard {
             VStack(alignment: .leading, spacing: 6) {
-                Text("Gearworks Assembly")
+                Text("Mechora")
                     .font(.system(size: 15, weight: .black, design: .rounded)).foregroundColor(GearPalette.ivory)
                 Text("A deterministic spatial-automation puzzle. Version 1.0")
                     .font(.system(size: 13, weight: .medium)).foregroundColor(GearPalette.haze)

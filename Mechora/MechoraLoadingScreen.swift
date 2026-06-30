@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct GearForgeLoadingScreen: View {
+struct MechoraLoadingScreen: View {
     @State private var spin = false
     @State private var pulse = false
 
@@ -21,7 +21,7 @@ struct GearForgeLoadingScreen: View {
                         .rotationEffect(.degrees(spin ? -360 : 0), anchor: .center)
                         .animation(.linear(duration: 4).repeatForever(autoreverses: false), value: spin)
                 }
-                Text("Gearworks Assembly")
+                Text("Mechora")
                     .font(.system(size: 30, weight: .black, design: .rounded))
                     .foregroundColor(GearPalette.ivory)
                 Text("Warming the drafting room and calibrating the assembly engine.")

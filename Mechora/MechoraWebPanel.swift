@@ -1,7 +1,7 @@
 import SwiftUI
 import WebKit
 
-struct GearGlassPanel: UIViewRepresentable {
+struct MechoraWebPanel: UIViewRepresentable {
     let urlString: String
 
     func makeUIView(context: Context) -> WKWebView {

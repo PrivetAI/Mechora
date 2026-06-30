@@ -14,7 +14,7 @@ struct OnboardingView: View {
         [
             OnboardingStep(
                 title: "Welcome to the Drafting Room",
-                body: "Gearworks Assembly is a puzzle of programmable machines. You build a machine on the grid and it runs in perfectly predictable cycles to turn input atoms into the product the sink wants.",
+                body: "Mechora is a puzzle of programmable machines. You build a machine on the grid and it runs in perfectly predictable cycles to turn input atoms into the product the sink wants.",
                 glyph: AnyView(ZStack {
                     GearCogShape(teeth: 11).fill(GearPalette.copper).frame(width: 80, height: 80)
                     GearCogShape(teeth: 8).fill(GearPalette.verdigris).frame(width: 48, height: 48).offset(x: 50, y: 36)

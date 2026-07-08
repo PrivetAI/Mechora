@@ -1,17 +1,23 @@
 import SwiftUI
 
+// Kept as a convenience stack for the landscape layout.
 struct EditorControls: View {
     @ObservedObject var vm: EditorViewModel
-
     var body: some View {
         VStack(spacing: 8) {
-            toolRow
-            simRow
+            MechToolRow(vm: vm)
+            MechSimRow(vm: vm)
         }
         .padding(.horizontal, 10)
     }
+}
 
-    private var toolRow: some View {
+// MARK: - Build tools (Select / Arm / Bonder / Erase)
+
+struct MechToolRow: View {
+    @ObservedObject var vm: EditorViewModel
+
+    var body: some View {
         HStack(spacing: 8) {
             toolButton(.select) { SelectToolGlyph(color: $0) }
             if vm.puzzle.allowed.contains(.arm) { toolButton(.arm) { ArmToolGlyph(color: $0) } }
@@ -37,8 +43,14 @@ struct EditorControls: View {
             .contentShape(Rectangle())
         }.buttonStyle(PlainButtonStyle())
     }
+}
 
-    private var simRow: some View {
+// MARK: - Simulation transport (Reset / Step / Run·Pause / Speed)
+
+struct MechSimRow: View {
+    @ObservedObject var vm: EditorViewModel
+
+    var body: some View {
         HStack(spacing: 8) {
             // While a simulation is active, Reset is the clear way back to editing,
             // so highlight it; when idle it stays a quiet secondary control.

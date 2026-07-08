@@ -63,6 +63,8 @@ final class EditorViewModel: ObservableObject {
         return solution.arms.first { $0.id == id }
     }
 
+    func arm(_ id: Int) -> ArmPlacement? { solution.arms.first { $0.id == id } }
+
     private func updateSelectedArm(_ transform: (inout ArmPlacement) -> Void) {
         guard let id = selectedArmId, let idx = solution.arms.firstIndex(where: { $0.id == id }) else { return }
         transform(&solution.arms[idx])

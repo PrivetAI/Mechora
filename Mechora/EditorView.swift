@@ -5,6 +5,9 @@ struct EditorView: View {
     @EnvironmentObject var store: GameStore
     @StateObject private var vm: EditorViewModel
     @State private var showGoal = false
+    @State private var panelTab: PanelTab = .build
+
+    enum PanelTab { case build, program }
 
     init(puzzle: Puzzle) {
         self.puzzle = puzzle
@@ -46,19 +49,91 @@ struct EditorView: View {
                 showGoal = true
             }
         }
+        // Selecting an arm that still needs a program jumps to the Program tab so
+        // the next thing you see is where to write its steps.
+        .onChange(of: vm.selectedArmId) { id in
+            if let id = id, vm.arm(id)?.tape.isEmpty == true {
+                withAnimation(.easeInOut(duration: 0.18)) { panelTab = .program }
+            }
+        }
+        // Picking a build tool shows the Build tab.
+        .onChange(of: vm.tool) { _ in
+            withAnimation(.easeInOut(duration: 0.18)) { panelTab = .build }
+        }
         .onDisappear { vm.onDisappear() }
     }
 
     // MARK: Layouts
 
+    // Board-hero portrait: the grid fills the space, everything else is a fixed
+    // strip or a tabbed panel — no vertical scrolling.
     private func portraitLayout(_ geo: GeometryProxy) -> some View {
         VStack(spacing: 8) {
             ObjectiveBanner(puzzle: puzzle, vm: vm).padding(.horizontal, 10)
-            EditorControls(vm: vm)
-            boardArea(height: geo.size.height * 0.46)
-            ScrollView { controlPanel.padding(.horizontal, 12).padding(.bottom, 12) }
+            MechSimRow(vm: vm).padding(.horizontal, 10)
+            boardAreaFlexible()
+            MechStatusStrip(vm: vm).padding(.horizontal, 10)
+            bottomPanel
         }
         .padding(.top, 6)
+    }
+
+    private func boardAreaFlexible() -> some View {
+        GeometryReader { boardGeo in
+            BoardCanvas(vm: vm, screenSize: boardGeo.size, showCoords: store.showGridCoords)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(RoundedRectangle(cornerRadius: 14).fill(GearPalette.panel.opacity(0.5)))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(GearPalette.line, lineWidth: 1))
+        .padding(.horizontal, 10)
+    }
+
+    // MARK: Tabbed bottom panel (Build | Program)
+
+    private var bottomPanel: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 8) {
+                panelTabButton("Build", .build)
+                panelTabButton("Program", .program)
+            }
+            if panelTab == .build {
+                VStack(spacing: 10) {
+                    MechToolRow(vm: vm)
+                    ArmInspectorView(vm: vm)
+                    MechMetricsChips(vm: vm)
+                }
+            } else {
+                TapeEditorView(vm: vm)
+            }
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(GearPalette.panel.opacity(0.55))
+                .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(GearPalette.line, lineWidth: 1))
+        )
+        .padding(.horizontal, 8)
+        .padding(.bottom, 8)
+    }
+
+    private func panelTabButton(_ title: String, _ tab: PanelTab) -> some View {
+        let active = panelTab == tab
+        // A "needs your attention" dot on Program when the selected arm has no tape.
+        let nudge = tab == .program && (vm.selectedArm?.tape.isEmpty ?? false)
+        return Button { withAnimation(.easeInOut(duration: 0.18)) { panelTab = tab } } label: {
+            HStack(spacing: 6) {
+                Text(title).font(.system(size: 14, weight: .black, design: .rounded))
+                    .foregroundColor(active ? GearPalette.navyDeep : GearPalette.ivory)
+                if nudge {
+                    Circle().fill(active ? GearPalette.navyDeep : GearPalette.copperBright)
+                        .frame(width: 7, height: 7)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 9)
+            .background(RoundedRectangle(cornerRadius: 11).fill(active ? GearPalette.copper : GearPalette.panelLift))
+            .contentShape(Rectangle())
+        }.buttonStyle(PlainButtonStyle())
     }
 
     private func landscapeLayout(_ geo: GeometryProxy) -> some View {
@@ -123,10 +198,12 @@ struct ObjectiveBanner: View {
                 }
                 Spacer(minLength: 0)
             }
-            Text("Carry atoms from the copper inputs to the green output to build this.")
-                .font(.system(size: 11.5, weight: .semibold))
-                .foregroundColor(GearPalette.haze)
-                .fixedSize(horizontal: false, vertical: true)
+            if !vm.hasArms {
+                Text("Carry atoms from the copper inputs to the green output to build this.")
+                    .font(.system(size: 11.5, weight: .semibold))
+                    .foregroundColor(GearPalette.haze)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             HStack(spacing: 12) {
                 legendChip(color: GearPalette.copperBright, label: "Input")
                 legendChip(color: GearPalette.verdigris, label: "Output")
@@ -227,8 +304,8 @@ struct ArmInspectorView: View {
                             .foregroundColor(GearPalette.ivory)
                     }
                     Text(vm.hasArms
-                         ? "Tap an arm on the grid to select it and edit its reach, facing, and program below."
-                         : "1. Tap the Arm tool above.\n2. Tap a grid cell next to a copper input.\n3. Tap the arm to program its looping tape, then press Run.")
+                         ? "Tap an arm on the grid to select it, set its reach and facing here, then write its steps in the Program tab."
+                         : "1. Tap the Arm tool above.\n2. Tap a grid cell next to a copper input.\n3. Write its steps in the Program tab, then press Run.")
                         .font(.system(size: 13, weight: .medium)).foregroundColor(GearPalette.haze)
                         .fixedSize(horizontal: false, vertical: true)
                 }

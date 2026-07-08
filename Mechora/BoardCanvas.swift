@@ -104,27 +104,43 @@ struct BoardCanvas: View {
             ctx.fill(Path(r), with: .color(GearPalette.haze.opacity(0.35)))
         }
 
-        // dispenser cells
+        // dispenser (INPUT) cells — filled copper tint + dashed edge + an "IN" tag
+        // so the atom source reads clearly, not as abstract decoration.
         for d in puzzle.dispensers {
             for a in d.molecule.atoms {
-                let r = cellRect(d.anchor + a.offset, cell, origin).insetBy(dx: 2, dy: 2)
-                ctx.stroke(Path(roundedRect: r, cornerRadius: 4),
-                           with: .color(GearPalette.copper.opacity(0.9)),
-                           style: StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
+                let full = cellRect(d.anchor + a.offset, cell, origin)
+                ctx.fill(Path(roundedRect: full.insetBy(dx: 1.5, dy: 1.5), cornerRadius: 5),
+                         with: .color(GearPalette.copper.opacity(0.16)))
+                ctx.stroke(Path(roundedRect: full.insetBy(dx: 2, dy: 2), cornerRadius: 4),
+                           with: .color(GearPalette.copper.opacity(0.95)),
+                           style: StrokeStyle(lineWidth: 1.6, dash: [4, 3]))
+            }
+            if cell > 18, let first = d.molecule.atoms.first {
+                let r = cellRect(d.anchor + first.offset, cell, origin)
+                let t = Text("IN").font(.system(size: min(11, cell * 0.3), weight: .black, design: .rounded))
+                    .foregroundColor(GearPalette.copperBright)
+                ctx.draw(t, at: CGPoint(x: r.minX + 3, y: r.minY + 2), anchor: .topLeading)
             }
         }
 
-        // sink ghost (target shape at rotation 0) + count badge
+        // sink (OUTPUT) cells — green tint fill + ghost target atom + an "OUT" tag.
         for sink in puzzle.sinks {
             for a in sink.target.atoms {
                 let cellPos = sink.anchor + a.offset
-                let r = cellRect(cellPos, cell, origin).insetBy(dx: 2, dy: 2)
-                ctx.stroke(Path(roundedRect: r, cornerRadius: 4),
+                let full = cellRect(cellPos, cell, origin)
+                ctx.fill(Path(roundedRect: full.insetBy(dx: 1.5, dy: 1.5), cornerRadius: 5),
+                         with: .color(GearPalette.verdigris.opacity(0.14)))
+                ctx.stroke(Path(roundedRect: full.insetBy(dx: 2, dy: 2), cornerRadius: 4),
                            with: .color(GearPalette.verdigris.opacity(0.95)),
-                           style: StrokeStyle(lineWidth: 1.6))
-                // ghost atom
-                let inset = cellRect(cellPos, cell, origin).insetBy(dx: cell * 0.26, dy: cell * 0.26)
-                ctx.fill(Path(ellipseIn: inset), with: .color(GearPalette.element(a.element).opacity(0.22)))
+                           style: StrokeStyle(lineWidth: 1.8))
+                let inset = full.insetBy(dx: cell * 0.26, dy: cell * 0.26)
+                ctx.fill(Path(ellipseIn: inset), with: .color(GearPalette.element(a.element).opacity(0.28)))
+            }
+            if cell > 18, let first = sink.target.atoms.first {
+                let r = cellRect(sink.anchor + first.offset, cell, origin)
+                let t = Text("OUT").font(.system(size: min(11, cell * 0.3), weight: .black, design: .rounded))
+                    .foregroundColor(GearPalette.verdigris)
+                ctx.draw(t, at: CGPoint(x: r.minX + 3, y: r.minY + 2), anchor: .topLeading)
             }
         }
 
@@ -190,6 +206,28 @@ struct BoardCanvas: View {
                 let sel = cellRect(arm.pivot, cell, origin).insetBy(dx: 1, dy: 1)
                 ctx.stroke(Path(roundedRect: sel, cornerRadius: 5),
                            with: .color(GearPalette.copperBright), style: StrokeStyle(lineWidth: 2, dash: [4, 3]))
+            }
+            // Editing: highlight the cell the gripper acts on (where Grab/Drop lands),
+            // so the arm's reach/facing is concrete before you ever press Run.
+            if selected && !vm.isSimActive {
+                let tgt = cellRect(arm.tip, cell, origin).insetBy(dx: cell * 0.16, dy: cell * 0.16)
+                ctx.stroke(Path(roundedRect: tgt, cornerRadius: 5),
+                           with: .color(GearPalette.gold.opacity(0.9)),
+                           style: StrokeStyle(lineWidth: 2, dash: [3, 3]))
+            }
+            // Running: float the current instruction beside the arm so its motion is
+            // legible against the program tape.
+            if let ins = arm.currentInstruction, cell > 16 {
+                let fsize = min(12, cell * 0.34)
+                let label = Text(ins.shortLabel)
+                    .font(.system(size: fsize, weight: .black, design: .rounded))
+                    .foregroundColor(GearPalette.navyDeep)
+                let lp = CGPoint(x: tc.x, y: tc.y - cell * 0.62)
+                let approxW = CGFloat(ins.shortLabel.count) * fsize * 0.64 + 8
+                let bg = CGRect(x: lp.x - approxW / 2, y: lp.y - fsize * 0.75,
+                                width: approxW, height: fsize * 1.5)
+                ctx.fill(Path(roundedRect: bg, cornerRadius: 5), with: .color(GearPalette.gold.opacity(0.92)))
+                ctx.draw(label, at: lp, anchor: .center)
             }
         }
 

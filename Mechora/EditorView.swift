@@ -55,7 +55,7 @@ struct EditorView: View {
         VStack(spacing: 8) {
             ObjectiveBanner(puzzle: puzzle, vm: vm).padding(.horizontal, 10)
             EditorControls(vm: vm)
-            boardArea(height: geo.size.height * 0.40)
+            boardArea(height: geo.size.height * 0.46)
             ScrollView { controlPanel.padding(.horizontal, 12).padding(.bottom, 12) }
         }
         .padding(.top, 6)
@@ -127,6 +127,20 @@ struct ObjectiveBanner: View {
                 .font(.system(size: 11.5, weight: .semibold))
                 .foregroundColor(GearPalette.haze)
                 .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 12) {
+                legendChip(color: GearPalette.copperBright, label: "Input")
+                legendChip(color: GearPalette.verdigris, label: "Output")
+                HStack(spacing: 4) {
+                    ArmToolGlyph(color: GearPalette.ivory).frame(width: 11, height: 11)
+                    Text("Arm").font(.system(size: 10.5, weight: .bold)).foregroundColor(GearPalette.haze)
+                }
+                HStack(spacing: 4) {
+                    RoundedRectangle(cornerRadius: 2).stroke(GearPalette.gold, style: StrokeStyle(lineWidth: 1.4, dash: [2, 2]))
+                        .frame(width: 11, height: 11)
+                    Text("Grab spot").font(.system(size: 10.5, weight: .bold)).foregroundColor(GearPalette.haze)
+                }
+                Spacer(minLength: 0)
+            }
             if !vm.hasArms {
                 HStack(spacing: 6) {
                     ArmToolGlyph(color: GearPalette.copperBright).frame(width: 14, height: 14)
@@ -145,6 +159,13 @@ struct ObjectiveBanner: View {
                 .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .stroke(vm.hasArms ? GearPalette.line : GearPalette.copper.opacity(0.7), lineWidth: 1))
         )
+    }
+
+    private func legendChip(color: Color, label: String) -> some View {
+        HStack(spacing: 4) {
+            RoundedRectangle(cornerRadius: 3).fill(color.opacity(0.9)).frame(width: 11, height: 11)
+            Text(label).font(.system(size: 10.5, weight: .bold)).foregroundColor(GearPalette.haze)
+        }
     }
 }
 

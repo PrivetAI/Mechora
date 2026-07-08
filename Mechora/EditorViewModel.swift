@@ -101,8 +101,11 @@ final class EditorViewModel: ObservableObject {
                 return
             }
             if isBlockedForArm(cell) { statusText = "Cannot place an arm there."; return }
+            // Start with an EMPTY program: a freshly placed arm should do nothing
+            // until the player writes its tape. (A canned default made Run look like
+            // the arm "just spins for no reason" — the #1 source of confusion.)
             let arm = ArmPlacement(id: nextArmId, pivot: cell, reach: 1, orientation: .east,
-                                   tape: [.grab, .rotateCW, .drop, .rotateCCW])
+                                   tape: [])
             nextArmId += 1
             solution.arms.append(arm)
             selectedArmId = arm.id
@@ -308,20 +311,36 @@ final class EditorViewModel: ObservableObject {
         return out
     }
 
-    struct ArmRender { let pivot: GridPos; let tip: GridPos; let reach: Int; let id: Int; let holding: Bool }
+    struct ArmRender {
+        let pivot: GridPos; let tip: GridPos; let reach: Int; let id: Int
+        let holding: Bool
+        let currentInstruction: Instruction?   // the step that produced the current pose (sim only)
+    }
 
     func renderArms() -> [ArmRender] {
         if let s = sim {
             return s.arms.enumerated().map { (i, a) in
-                ArmRender(pivot: a.pivot, tip: a.tip, reach: a.reach,
-                          id: solution.arms.indices.contains(i) ? solution.arms[i].id : i,
-                          holding: a.anchor != nil)
+                let cur: Instruction? = a.tape.isEmpty ? nil : a.tape[(a.ptr - 1 + a.tape.count) % a.tape.count]
+                return ArmRender(pivot: a.pivot, tip: a.tip, reach: a.reach,
+                                 id: solution.arms.indices.contains(i) ? solution.arms[i].id : i,
+                                 holding: a.anchor != nil, currentInstruction: cur)
             }
         }
         return solution.arms.map { arm in
             let tip = GridPos(x: arm.pivot.x + arm.orientation.vector.x * arm.reach,
                               y: arm.pivot.y + arm.orientation.vector.y * arm.reach)
-            return ArmRender(pivot: arm.pivot, tip: tip, reach: arm.reach, id: arm.id, holding: false)
+            return ArmRender(pivot: arm.pivot, tip: tip, reach: arm.reach, id: arm.id,
+                             holding: false, currentInstruction: nil)
         }
+    }
+
+    /// Index of the tape token the selected/given arm is currently executing during
+    /// a sim (i.e. the step that produced the pose now on screen), or nil.
+    func currentTapeIndex(forArmId id: Int) -> Int? {
+        guard let s = sim, let idx = solution.arms.firstIndex(where: { $0.id == id }),
+              idx < s.arms.count else { return nil }
+        let a = s.arms[idx]
+        guard !a.tape.isEmpty else { return nil }
+        return (a.ptr - 1 + a.tape.count) % a.tape.count
     }
 }

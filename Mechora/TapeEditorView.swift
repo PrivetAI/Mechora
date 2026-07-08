@@ -15,8 +15,13 @@ struct TapeEditorView: View {
                             .font(.system(size: 15, weight: .black, design: .rounded))
                             .foregroundColor(GearPalette.ivory)
                         Spacer()
-                        Text("\(arm.tape.count) steps · loops")
-                            .font(.system(size: 12, weight: .bold)).foregroundColor(GearPalette.haze)
+                        if let cur = vm.currentTapeIndex(forArmId: arm.id) {
+                            Text("▶ running · step \(cur + 1)/\(arm.tape.count)")
+                                .font(.system(size: 12, weight: .black)).foregroundColor(GearPalette.verdigris)
+                        } else {
+                            Text("\(arm.tape.count) steps · loops")
+                                .font(.system(size: 12, weight: .bold)).foregroundColor(GearPalette.haze)
+                        }
                         if !arm.tape.isEmpty {
                             Button { vm.clearTape() } label: {
                                 Text("Clear").font(.system(size: 12, weight: .bold)).foregroundColor(GearPalette.alert)
@@ -47,9 +52,10 @@ struct TapeEditorView: View {
                 .padding(.vertical, 10)
         } else {
             ScrollView(.horizontal, showsIndicators: false) {
+                let cur = vm.currentTapeIndex(forArmId: arm.id)
                 HStack(spacing: 8) {
                     ForEach(Array(arm.tape.enumerated()), id: \.offset) { idx, ins in
-                        tapeToken(index: idx, instruction: ins)
+                        tapeToken(index: idx, instruction: ins, isCurrent: idx == cur)
                     }
                 }
                 .padding(.vertical, 2)
@@ -57,9 +63,11 @@ struct TapeEditorView: View {
         }
     }
 
-    private func tapeToken(index: Int, instruction: Instruction) -> some View {
+    private func tapeToken(index: Int, instruction: Instruction, isCurrent: Bool) -> some View {
         VStack(spacing: 4) {
-            Text("\(index + 1)").font(.system(size: 9, weight: .bold)).foregroundColor(GearPalette.haze)
+            Text(isCurrent ? "▶ \(index + 1)" : "\(index + 1)")
+                .font(.system(size: 9, weight: .black))
+                .foregroundColor(isCurrent ? GearPalette.verdigris : GearPalette.haze)
             ZStack(alignment: .topTrailing) {
                 VStack(spacing: 3) {
                     InstructionGlyph(instruction: instruction, color: GearPalette.copperBright)
@@ -69,8 +77,9 @@ struct TapeEditorView: View {
                 }
                 .padding(8)
                 .frame(width: 60)
-                .background(RoundedRectangle(cornerRadius: 10).fill(GearPalette.navyDeep))
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(GearPalette.line, lineWidth: 1))
+                .background(RoundedRectangle(cornerRadius: 10).fill(isCurrent ? GearPalette.panelLift : GearPalette.navyDeep))
+                .overlay(RoundedRectangle(cornerRadius: 10)
+                    .stroke(isCurrent ? GearPalette.verdigris : GearPalette.line, lineWidth: isCurrent ? 2.5 : 1))
             }
             if !vm.isSimActive {
                 HStack(spacing: 6) {

@@ -17,6 +17,7 @@ struct SaveState: Codable {
     var soundOn: Bool
     var showGridCoords: Bool
     var seenGoals: [String]   // puzzle ids whose goal sheet has auto-shown once
+    var coachDone: Bool       // first-puzzle interactive coach finished/skipped
 
     init() {
         version = 1
@@ -32,11 +33,12 @@ struct SaveState: Codable {
         soundOn = true
         showGridCoords = false
         seenGoals = []
+        coachDone = false
     }
 
     enum CodingKeys: String, CodingKey {
         case version, solutions, solvedIds, bestCycles, bestCost, bestArea, bestInstr
-        case unlockedAchievements, runsStarted, onboardingDone, soundOn, showGridCoords, seenGoals
+        case unlockedAchievements, runsStarted, onboardingDone, soundOn, showGridCoords, seenGoals, coachDone
     }
 
     init(from decoder: Decoder) throws {
@@ -54,6 +56,7 @@ struct SaveState: Codable {
         soundOn = try c.decodeIfPresent(Bool.self, forKey: .soundOn) ?? true
         showGridCoords = try c.decodeIfPresent(Bool.self, forKey: .showGridCoords) ?? false
         seenGoals = try c.decodeIfPresent([String].self, forKey: .seenGoals) ?? []
+        coachDone = try c.decodeIfPresent(Bool.self, forKey: .coachDone) ?? false
     }
 }
 
@@ -177,6 +180,13 @@ final class GameStore: ObservableObject {
 
     func toggleGridCoords() { state.showGridCoords.toggle(); persist() }
     var showGridCoords: Bool { state.showGridCoords }
+
+    var coachDone: Bool { state.coachDone }
+    func setCoachDone() {
+        guard !state.coachDone else { return }
+        state.coachDone = true
+        persist()
+    }
 
     func resetProgress() {
         state = SaveState()

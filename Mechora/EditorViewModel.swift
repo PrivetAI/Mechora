@@ -75,6 +75,7 @@ final class EditorViewModel: ObservableObject {
 
     var isSimActive: Bool { sim != nil }
     var hasArms: Bool { !solution.arms.isEmpty }
+    var hasAnyProgram: Bool { solution.arms.contains { !$0.tape.isEmpty } }
 
     private func mechanismOccupies(_ cell: GridPos) -> Bool {
         if solution.arms.contains(where: { $0.pivot == cell }) { return true }

@@ -6,6 +6,7 @@ struct EditorView: View {
     @StateObject private var vm: EditorViewModel
     @State private var showGoal = false
     @State private var panelTab: PanelTab = .build
+    @State private var showCoach = false
 
     enum PanelTab { case build, program }
 
@@ -48,6 +49,13 @@ struct EditorView: View {
                 store.markGoalSeen(puzzle.id)
                 showGoal = true
             }
+            // Interactive coach only on the very first puzzle, until finished/skipped.
+            showCoach = (puzzle.chapter == 1 && puzzle.order == 1) && !store.coachDone
+        }
+        // Reaching a solve during the coach means they've seen the whole loop —
+        // don't resurface it next time even if they leave without tapping Finish.
+        .onChange(of: vm.phase) { phase in
+            if phase == .solved { store.setCoachDone() }
         }
         // Selecting an arm that still needs a program jumps to the Program tab so
         // the next thing you see is where to write its steps.
@@ -85,7 +93,69 @@ struct EditorView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(RoundedRectangle(cornerRadius: 14).fill(GearPalette.panel.opacity(0.5)))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(GearPalette.line, lineWidth: 1))
+        .overlay(alignment: .top) { coachCard }
         .padding(.horizontal, 10)
+    }
+
+    // MARK: Interactive coach (first puzzle only)
+
+    @ViewBuilder private var coachCard: some View {
+        if showCoach {
+            let s = coachStep
+            HStack(alignment: .top, spacing: 10) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(s.title)
+                        .font(.system(size: 12, weight: .black, design: .rounded))
+                        .foregroundColor(GearPalette.gold)
+                    Text(s.body)
+                        .font(.system(size: 12.5, weight: .semibold))
+                        .foregroundColor(GearPalette.ivory)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 6)
+                Button { finishCoach() } label: {
+                    Text(s.isDone ? "Finish" : "Skip")
+                        .font(.system(size: 12, weight: .bold)).foregroundColor(GearPalette.navyDeep)
+                        .padding(.horizontal, 12).padding(.vertical, 7)
+                        .background(RoundedRectangle(cornerRadius: 9).fill(s.isDone ? GearPalette.verdigris : GearPalette.copper))
+                }.buttonStyle(PlainButtonStyle())
+            }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12).fill(GearPalette.panel.opacity(0.97))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(GearPalette.gold.opacity(0.6), lineWidth: 1.5))
+            )
+            .padding(8)
+            .transition(.move(edge: .top).combined(with: .opacity))
+        }
+    }
+
+    private struct CoachInfo { let title: String; let body: String; let isDone: Bool }
+
+    private var coachStep: CoachInfo {
+        if vm.phase == .solved {
+            return CoachInfo(title: "You did it!",
+                             body: "That's the whole game: program an arm to carry atoms from the copper IN cells to the green OUT cell.",
+                             isDone: true)
+        }
+        if !vm.hasArms {
+            return CoachInfo(title: "Step 1 of 3 · Place an arm",
+                             body: "In the Build tab, tap the Arm tool, then tap a grid cell next to a copper IN cell.",
+                             isDone: false)
+        }
+        if !vm.hasAnyProgram {
+            return CoachInfo(title: "Step 2 of 3 · Program it",
+                             body: "The Program tab is open. Add Grab, then a Turn or Extend so the gripper reaches OUT, then Drop.",
+                             isDone: false)
+        }
+        return CoachInfo(title: "Step 3 of 3 · Run it",
+                         body: "Press Run and watch the arm follow its looping tape. Reset returns you to editing.",
+                         isDone: false)
+    }
+
+    private func finishCoach() {
+        withAnimation(.easeInOut(duration: 0.2)) { showCoach = false }
+        store.setCoachDone()
     }
 
     // MARK: Tabbed bottom panel (Build | Program)
@@ -157,6 +227,7 @@ struct EditorView: View {
         .frame(height: height)
         .background(RoundedRectangle(cornerRadius: 14).fill(GearPalette.panel.opacity(0.5)))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(GearPalette.line, lineWidth: 1))
+        .overlay(alignment: .top) { coachCard }
         .padding(.horizontal, 10)
     }
 

@@ -75,25 +75,39 @@ struct EditorView: View {
 
     // Board-hero portrait: the grid fills the space, everything else is a fixed
     // strip or a tabbed panel — no vertical scrolling.
+    // On short screens (iPad compatibility mode and iPhone SE/8 report 375×667,
+    // ≈554pt of content) the full-size fixed sections would starve the board to
+    // zero height and overlap each other, so compact mode trims the banner,
+    // shows the coach inline instead of over the board, and caps the panel with
+    // an inner scroll.
     private func portraitLayout(_ geo: GeometryProxy) -> some View {
-        VStack(spacing: 8) {
-            ObjectiveBanner(puzzle: puzzle, vm: vm).padding(.horizontal, 10)
+        let compact = geo.size.height < 600
+        return VStack(spacing: compact ? 6 : 8) {
+            if compact && showCoach {
+                coachCardBody
+                    .padding(.horizontal, 10)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+            } else {
+                ObjectiveBanner(puzzle: puzzle, vm: vm, compact: compact).padding(.horizontal, 10)
+            }
             MechSimRow(vm: vm).padding(.horizontal, 10)
-            boardAreaFlexible()
+            boardAreaFlexible(overlayCoach: !compact)
             MechStatusStrip(vm: vm).padding(.horizontal, 10)
-            bottomPanel
+            bottomPanel(compact: compact)
         }
         .padding(.top, 6)
     }
 
-    private func boardAreaFlexible() -> some View {
+    private func boardAreaFlexible(overlayCoach: Bool) -> some View {
         GeometryReader { boardGeo in
             BoardCanvas(vm: vm, screenSize: boardGeo.size, showCoords: store.showGridCoords)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, minHeight: 110, maxHeight: .infinity)
         .background(RoundedRectangle(cornerRadius: 14).fill(GearPalette.panel.opacity(0.5)))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(GearPalette.line, lineWidth: 1))
-        .overlay(alignment: .top) { coachCard }
+        .overlay(alignment: .top) {
+            if overlayCoach { coachCard }
+        }
         .padding(.horizontal, 10)
     }
 
@@ -101,33 +115,37 @@ struct EditorView: View {
 
     @ViewBuilder private var coachCard: some View {
         if showCoach {
-            let s = coachStep
-            HStack(alignment: .top, spacing: 10) {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(s.title)
-                        .font(.system(size: 12, weight: .black, design: .rounded))
-                        .foregroundColor(GearPalette.gold)
-                    Text(s.body)
-                        .font(.system(size: 12.5, weight: .semibold))
-                        .foregroundColor(GearPalette.ivory)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 6)
-                Button { finishCoach() } label: {
-                    Text(s.isDone ? "Finish" : "Skip")
-                        .font(.system(size: 12, weight: .bold)).foregroundColor(GearPalette.navyDeep)
-                        .padding(.horizontal, 12).padding(.vertical, 7)
-                        .background(RoundedRectangle(cornerRadius: 9).fill(s.isDone ? GearPalette.verdigris : GearPalette.copper))
-                }.buttonStyle(PlainButtonStyle())
-            }
-            .padding(12)
-            .background(
-                RoundedRectangle(cornerRadius: 12).fill(GearPalette.panel.opacity(0.97))
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(GearPalette.gold.opacity(0.6), lineWidth: 1.5))
-            )
-            .padding(8)
-            .transition(.move(edge: .top).combined(with: .opacity))
+            coachCardBody
+                .padding(8)
+                .transition(.move(edge: .top).combined(with: .opacity))
         }
+    }
+
+    private var coachCardBody: some View {
+        let s = coachStep
+        return HStack(alignment: .top, spacing: 10) {
+            VStack(alignment: .leading, spacing: 3) {
+                Text(s.title)
+                    .font(.system(size: 12, weight: .black, design: .rounded))
+                    .foregroundColor(GearPalette.gold)
+                Text(s.body)
+                    .font(.system(size: 12.5, weight: .semibold))
+                    .foregroundColor(GearPalette.ivory)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 6)
+            Button { finishCoach() } label: {
+                Text(s.isDone ? "Finish" : "Skip")
+                    .font(.system(size: 12, weight: .bold)).foregroundColor(GearPalette.navyDeep)
+                    .padding(.horizontal, 12).padding(.vertical, 7)
+                    .background(RoundedRectangle(cornerRadius: 9).fill(s.isDone ? GearPalette.verdigris : GearPalette.copper))
+            }.buttonStyle(PlainButtonStyle())
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 12).fill(GearPalette.panel.opacity(0.97))
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(GearPalette.gold.opacity(0.6), lineWidth: 1.5))
+        )
     }
 
     private struct CoachInfo { let title: String; let body: String; let isDone: Bool }
@@ -160,30 +178,43 @@ struct EditorView: View {
 
     // MARK: Tabbed bottom panel (Build | Program)
 
-    private var bottomPanel: some View {
-        VStack(spacing: 10) {
+    private func bottomPanel(compact: Bool) -> some View {
+        VStack(spacing: compact ? 8 : 10) {
             HStack(spacing: 8) {
                 panelTabButton("Build", .build)
                 panelTabButton("Program", .program)
             }
-            if panelTab == .build {
-                VStack(spacing: 10) {
-                    MechToolRow(vm: vm)
-                    ArmInspectorView(vm: vm)
-                    MechMetricsChips(vm: vm)
+            if compact {
+                // Fixed-height inner scroll keeps the panel from pushing the
+                // board off short screens; everything stays reachable.
+                ScrollView {
+                    panelContent.padding(.bottom, 2)
                 }
+                .frame(height: 150)
             } else {
-                TapeEditorView(vm: vm)
+                panelContent
             }
         }
-        .padding(12)
+        .padding(compact ? 8 : 12)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(GearPalette.panel.opacity(0.55))
                 .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(GearPalette.line, lineWidth: 1))
         )
         .padding(.horizontal, 8)
-        .padding(.bottom, 8)
+        .padding(.bottom, compact ? 4 : 8)
+    }
+
+    @ViewBuilder private var panelContent: some View {
+        if panelTab == .build {
+            VStack(spacing: 10) {
+                MechToolRow(vm: vm)
+                ArmInspectorView(vm: vm)
+                MechMetricsChips(vm: vm)
+            }
+        } else {
+            TapeEditorView(vm: vm)
+        }
     }
 
     private func panelTabButton(_ title: String, _ tab: PanelTab) -> some View {
@@ -207,11 +238,12 @@ struct EditorView: View {
     }
 
     private func landscapeLayout(_ geo: GeometryProxy) -> some View {
-        HStack(spacing: 10) {
+        let compact = geo.size.height < 420
+        return HStack(spacing: 10) {
             VStack(spacing: 8) {
-                ObjectiveBanner(puzzle: puzzle, vm: vm)
+                ObjectiveBanner(puzzle: puzzle, vm: vm, compact: compact)
                 EditorControls(vm: vm)
-                boardArea(height: geo.size.height - 150)
+                boardArea(height: max(120, geo.size.height - (compact ? 210 : 150)))
             }
             .frame(width: geo.size.width * 0.5)
             ScrollView { controlPanel.padding(.trailing, 10).padding(.bottom, 12) }
@@ -248,6 +280,8 @@ struct EditorView: View {
 struct ObjectiveBanner: View {
     let puzzle: Puzzle
     @ObservedObject var vm: EditorViewModel
+    /// Short screens: keep only the target row and the first-action hint.
+    var compact: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -269,25 +303,27 @@ struct ObjectiveBanner: View {
                 }
                 Spacer(minLength: 0)
             }
-            if !vm.hasArms {
+            if !vm.hasArms && !compact {
                 Text("Carry atoms from the copper inputs to the green output to build this.")
                     .font(.system(size: 11.5, weight: .semibold))
                     .foregroundColor(GearPalette.haze)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            HStack(spacing: 12) {
-                legendChip(color: GearPalette.copperBright, label: "Input")
-                legendChip(color: GearPalette.verdigris, label: "Output")
-                HStack(spacing: 4) {
-                    ArmToolGlyph(color: GearPalette.ivory).frame(width: 11, height: 11)
-                    Text("Arm").font(.system(size: 10.5, weight: .bold)).foregroundColor(GearPalette.haze)
+            if !compact {
+                HStack(spacing: 12) {
+                    legendChip(color: GearPalette.copperBright, label: "Input")
+                    legendChip(color: GearPalette.verdigris, label: "Output")
+                    HStack(spacing: 4) {
+                        ArmToolGlyph(color: GearPalette.ivory).frame(width: 11, height: 11)
+                        Text("Arm").font(.system(size: 10.5, weight: .bold)).foregroundColor(GearPalette.haze)
+                    }
+                    HStack(spacing: 4) {
+                        RoundedRectangle(cornerRadius: 2).stroke(GearPalette.gold, style: StrokeStyle(lineWidth: 1.4, dash: [2, 2]))
+                            .frame(width: 11, height: 11)
+                        Text("Grab spot").font(.system(size: 10.5, weight: .bold)).foregroundColor(GearPalette.haze)
+                    }
+                    Spacer(minLength: 0)
                 }
-                HStack(spacing: 4) {
-                    RoundedRectangle(cornerRadius: 2).stroke(GearPalette.gold, style: StrokeStyle(lineWidth: 1.4, dash: [2, 2]))
-                        .frame(width: 11, height: 11)
-                    Text("Grab spot").font(.system(size: 10.5, weight: .bold)).foregroundColor(GearPalette.haze)
-                }
-                Spacer(minLength: 0)
             }
             if !vm.hasArms {
                 HStack(spacing: 6) {
